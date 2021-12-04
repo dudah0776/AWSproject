@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>이미지 업로드</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<script>
+    $( document ).ready(function() {
+        $(".que").click(function() {
+         $(this).next(".anw").stop().slideToggle(300);
+        $(this).toggleClass('on').siblings();
+        //  $(this).next(".anw").siblings(".anw").slideUp(300); // 1개씩 펼치기
+        });
+    });
+</script>
+<script src="static/js/index.js"></script>
+<body>
+    <div class="container">
+        <div class="image-upload" id="image-upload">
+            <form action="http://127.0.0.1:5000/upload" id="frm" method="post" enctype="multipart/form-data">
+                <div class="uploadbutton">
+                    <label for="chooseFile">
+                        upload
+                    </label>
+                </div>
+                <input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="loadFile(this)">
+
+                <div class="fileContainer">
+                    <div class="fileInput">
+                        <p>FILE NAME:</p>
+                        <p id="fileName"></p>
+                    </div>
+                    <div id = "submitbutton" onclick= "document.getElementById('frm').submit();">SUBMIT</div>
+                </div>
+            </form>
+            </br></br></br></br></br></br>
+            <div class="que">
+                <span>Text</span>
+               </div>
+               <div class="anw">
+                <span>{{full_text}}</span>
+               </div>
+                <div class="que">
+                <span>  Translated</span>
+               </div>
+               <div class="anw">
+                <span>{{trans_text}}</span>
+               </div>
+        </div>
+    </div>
+</body>
+</html>
