@@ -71,28 +71,21 @@ def main():
 
 @app.route('/upload', methods=['POST'])
 def file_upload():
-    # file=request.files['file']
-    # photo_name=file.filename
-    # s3.put_object(
-    #     ACL='public-read',
-    #     Bucket=bucket,
-    #     Body=file,
-    #     Key=file.filename,
-    #     ContentType=file.content_type)
-    photo_name='test.jpg'
+    file=request.files['file']
+    photo_name=file.filename
+    s3.put_object(
+        ACL='public-read',
+        Bucket=bucket,
+        Body=file,
+        Key=file.filename,
+        ContentType=file.content_type)
     print('file2:', photo_name)
     full_text=detect_text(photo_name, bucket)
     print('fulltext:',full_text)
     trans_text=translate_text(full_text)
     print('transtext:',trans_text)
     return render_template('index.html', full_text=full_text, trans_text=trans_text, photo_name=photo_name)
-
-    # print(file.filename)
-    # #put_object(s3, 버킷, 파일이름, 저장될이름)
-    # ret=s3_put_object(s3, 'koobucketest', file.filename, 'tes.jpg')
-    # print(ret)
-    # return '업로드 성공'
-
+    
 if __name__ == '__main__':
     app.run()
 
