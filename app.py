@@ -71,7 +71,7 @@ def main():
 
 @app.route('/upload', methods=['POST'])
 def file_upload():
-    file=request.files['file']
+    file=request.files['chooseFile']
     photo_name=file.filename
     s3.put_object(
         ACL='public-read',
@@ -87,11 +87,4 @@ def file_upload():
     return render_template('index.html', full_text=full_text, trans_text=trans_text, photo_name=photo_name)
     
 if __name__ == '__main__':
-    app.run()
-
-
-
-
-
-
-
+    app.run(host="0.0.0.0")
