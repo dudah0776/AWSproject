@@ -4,6 +4,7 @@ import json
 import urllib.request
 from flask import Flask, render_template, request, jsonify
 import boto3
+from boto.s3.connection import S3Connection, Bucket, Key
 
 app = Flask(__name__)
 def s3_connect():
@@ -30,12 +31,12 @@ def detect_text(photo, bucket):
     print('Detected text\n----------')
     for text in textDetections:
         print('Detected text:' + text['DetectedText'])
-        str+=text['DetectedText']
-        print('Confidence: ' + "{:.2f}".format(text['Confidence']) + "%")
-        print('Id: {}'.format(text['Id']))
+        # print('Confidence: ' + "{:.2f}".format(text['Confidence']) + "%")
+        # print('Id: {}'.format(text['Id']))
         if 'ParentId' in text:
+            str+=(text['DetectedText']+' ')
             print('Parent Id: {}'.format(text['ParentId']))
-            print('Type:' + text['Type'])
+            # print('Type:' + text['Type'])
             print()
     return str
 
@@ -60,17 +61,23 @@ def translate_text(full_text):
     else:
         print("Error Code:" + rescode)
         return False
+        
+def make_empty_bucket(s3, bucket):
+    bucket=s3.Bucket(bucket)
+    bucket.objects.all().delete()
+    return 'bucket clear success'
 
 s3=s3_connect()
 bucket='koobucketest'
 full_text=''
 trans_text=''
+count=0
 @app.route('/')
 def main():
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
-def file_upload():
+def file_upload(count):
     file=request.files['chooseFile']
     photo_name=file.filename
     s3.put_object(
@@ -84,7 +91,9 @@ def file_upload():
     print('fulltext:',full_text)
     trans_text=translate_text(full_text)
     print('transtext:',trans_text)
-    return render_template('index.html', full_text=full_text, trans_text=trans_text, photo_name=photo_name)
+    if count > 1000:
+        make_empty_bucket(s3, bucket)
+    return render_template('index.html', full_text=full_text, trans_text=trans_text, photo_name=photo_name), count
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
