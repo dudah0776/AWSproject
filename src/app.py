@@ -41,8 +41,8 @@ def detect_text(photo, bucket):
     return str
 
 def translate_text(full_text):
-    client_id = "rGDoQZpKY_hSKcbj7QIG" # 개발자센터에서 발급받은 Client ID 값
-    client_secret = "qQImoYuwsR" # 개발자센터에서 발급받은 Client Secret 값
+    client_id = "clientKey" # 개발자센터에서 발급받은 Client ID 값
+    client_secret = "clientSecret" # 개발자센터에서 발급받은 Client Secret 값
     encText = urllib.parse.quote(full_text)
     data = "source=en&target=ko&text=" + encText
     url = "https://openapi.naver.com/v1/papago/n2mt"
